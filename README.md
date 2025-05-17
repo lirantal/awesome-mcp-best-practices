@@ -18,8 +18,12 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 - MCP Server Security
   - [Secure MCP Server Code]()
   - [Secure MCP Server Dependencies]()
+  - [Avoid descriptive errors]()
 - MCP Server Performance
+  - [Cache costly Tools]()
 - MCP Server Errors and Observability
+  - [Graceful timeouts]()
+  - 
 
 ## MCP Clients
 
