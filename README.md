@@ -6,19 +6,20 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 
 ## MCP Servers
 
-- 1 MCP Server Tools:
+- 1 MCP Server Tools
   - 1.1 [Tool Naming Standards](#11-Tool-Naming-Standards)
   - 1.2 [Tool Naming Aliases](#12-Tool-Naming-Aliases)
   - 1.3 [Avoid Not Found Responses](13-Avoid-Not-Found-Responses)
 - 2 MCP Server Architecture
   -  2.1 [Abstract Server Capabilities](#21-Abstract-Server-Capabilities)
-- MCP Server Deployment:
+- MCP Server Testing
+- MCP Server Deployment
   - [Package Your MCP Server as a Docker Container]() 
-- MCP Server Security: 
+- MCP Server Security
   - [Secure MCP Server Code]()
   - [Secure MCP Server Dependencies]()
-- MCP Server Performance:
-- MCP Server Errors and Observability:
+- MCP Server Performance
+- MCP Server Errors and Observability
 
 ## MCP Clients
 
@@ -160,7 +161,7 @@ You may not know ahead of time if you will need to build for an STDIO or HTTP tr
 
 ---
 
-## MCP Server Deployment:
+## MCP Server Deployment
 
 ### 🔵 Package Your MCP Server as a Docker Container
 
@@ -178,7 +179,7 @@ MCP Servers often require specific runtime environments (Node.js, Python) with p
 - Simplified Deployment: Reduces user setup to installing Docker and running a container
 - Resource Management: Provides built-in tools for controlling CPU, memory, and network usage
 
-Example `Dockerfile` implementation to package an MCP Server:
+Example `Dockerfile` implementation to package an MCP Server
 
 ```
 FROM node:18-slim
@@ -203,7 +204,7 @@ docker run -p 3000:3000 your-mcp-server-image
 
 ---
 
-## MCP Server Security: 
+## MCP Server Security
   
 ### 🔵 Secure MCP Server Dependencies
 
