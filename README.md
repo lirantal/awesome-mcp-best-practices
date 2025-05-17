@@ -8,7 +8,10 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 
 - 1 MCP Server Tools:
   - 1.1 [Tool Naming Standards](#11-Tool-Naming-Standards)
-  - 1.2 [Avoid Not Found Responses](12-Avoid-Not-Found-Responses)
+  - 1.2 [Tool Naming Aliases](#12-Tool-Naming-Aliases)
+  - 1.3 [Avoid Not Found Responses](13-Avoid-Not-Found-Responses)
+- 2 MCP Server Architecture
+  -  2.1 [Abstract Server Capabilities](#21-Abstract-Server-Capabilities)
 - MCP Server Deployment:
   - [Package Your MCP Server as a Docker Container]() 
 - MCP Server Security: 
@@ -19,7 +22,7 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 
 ## MCP Clients
 
-TBD
+// TBD
 
 ---
 
@@ -63,7 +66,39 @@ Using non-standard naming conventions can prevent or disrupt MCP Clients from pr
 
 ---
 
-### 🔵 1.2 Avoid Not Found Responses
+### 🔵 1.2 Tool Naming Aliases
+
+When the Tool name can be intereted and accessed using different naming conventions, call out aliases in the Tool's description.
+
+#### ❌ Problematic Pattern
+
+For example, a `postMesage` tool name might be too specific:
+
+```javascript
+server.tool(
+  "postMessage",
+  "Post a message under your account",
+   () => {}
+)
+```
+
+The LLM might not invoke the tool if the users ask for "share a social post on Twitter", or "upload this picture to Instagram".
+
+#### ✅ Recommended Practice
+
+Specify aliases and elaborate description for LLMs to better understand when it is required to invoke your tool.
+
+```javascript
+server.tool(
+  "postMessage",
+  "Upload, share, and post messages on social media",
+   () => {}
+)
+```
+
+---
+
+### 🔵 1.3 Avoid Not Found Responses
 
 When implementing search-type tools in your MCP Server, avoid returning explicit "not found" messages even when exact matches aren't available.
 
@@ -104,6 +139,24 @@ Let the LLM determine relevance from the data provided rather than prematurely d
 #### ⚠️ Important Exception
 
 This approach isn't appropriate for all scenarios. When handling sensitive data (like user information), security and privacy concerns should take precedence over providing alternative data.
+
+---
+
+## MCP Server Architecture
+
+### 🔵 2.1 Abstract Server Capabilities
+
+Follow an inversion-of-control paradigm to allow your MCP Server capabilities to receive a `server` object and use it to apply `tools`, `resources`, `prompts`, and other capabilities.
+
+#### 💡 Why It Matters
+
+You may not know ahead of time if you will need to build for an STDIO or HTTP transports, nor you don't know which SDK or cloud infrastructure you will be deploying to (e.g: Vercel vs Cloudflare). To allow the underlying MCP Server logic implementation to supplement any of these future concerns, build it in a way that 
+
+// TBD bad pattern
+
+// TBD good pattern
+
+// TBD example code
 
 ---
 
