@@ -7,7 +7,7 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 ## MCP Servers
 
 - 1 MCP Server Tools
-  - 1.1 [Tool Naming Standards](#11-Tool-Naming-Standards)
+  - 1.1 [Tool Naming Standards](#11-tool-naming-standards)
   - 1.2 [Tool Naming Aliases](#12-Tool-Naming-Aliases)
   - 1.3 [Tool Description Standards](#13-Tool-Description-Standards)
   - 1.4 [Avoid Not Found Responses](14-Avoid-Not-Found-Responses)
