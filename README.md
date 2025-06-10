@@ -9,7 +9,8 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 - 1 MCP Server Tools
   - 1.1 [Tool Naming Standards](#11-Tool-Naming-Standards)
   - 1.2 [Tool Naming Aliases](#12-Tool-Naming-Aliases)
-  - 1.3 [Avoid Not Found Responses](13-Avoid-Not-Found-Responses)
+  - 1.3 [Tool Description Standards](#13-Tool-Description-Standards)
+  - 1.4 [Avoid Not Found Responses](14-Avoid-Not-Found-Responses)
 - 2 MCP Server Architecture
   -  2.1 [Abstract Server Capabilities](#21-Abstract-Server-Capabilities)
 - MCP Server Testing
@@ -42,7 +43,7 @@ Use consistent, compatible naming conventions for your MCP Server `Tools` to ens
 - Spaces: `get Npm Package Info`
 - Dot notation: `get.Npm.Package.Info`
 - Brackets/parentheses: `get(Npm)PackageInfo`
-- 
+
 #### ✅ Recommended Tool Naming Conventions
 
 - ✅ camelCase (**preferred**): `getNpmPackageInfo`
@@ -103,7 +104,39 @@ server.tool(
 
 ---
 
-### 🔵 1.3 Avoid Not Found Responses
+### 🔵 1.3 Tool Description Standards
+
+Even with large content windows, choosing the right tool to call, especially when many tools are exposed, will be a difficult task for an LLM. Providing as much context as possible within the description of tools is necessary and helpful.
+
+#### ❌ Avoid These Tool Description Conventions
+
+Short description such as "Call this function to execute an SQL query"
+ 
+#### ✅ Recommended Tool Description Conventions
+
+- Provide a use-case example reference
+- Add necessary notes and nuances relevant to the tool
+
+```javascript
+server.tool(
+  "runSqlQuery",
+  `<use_case>Use this tool to execute a single SQL query against a Postgres database.</use_case>
+   <important_notes>
+     If you have a temporary branch from a prior step, you MUST:
+     1. Pass the branch ID to this tool unless explicitly told otherwise
+     2. Tell the user that you ar eusing the temporary branch with ID [branch_id]
+   </important_notes>
+  `
+);
+```
+
+#### 💡 Why It Matters
+
+Using non-standard naming conventions can prevent or disrupt MCP Clients from properly discovering and surfacing your tools to end users. GPT-4o tokenization works best with `camelCase` naming conventions.
+
+---
+
+### 🔵 1.4 Avoid Not Found Responses
 
 When implementing search-type tools in your MCP Server, avoid returning explicit "not found" messages even when exact matches aren't available.
 
