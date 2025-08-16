@@ -15,6 +15,7 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
   - 2.1 [Provide Rich Server Instructions](#-21-provide-rich-server-instructions)
 - 3 MCP Server Architecture
   -  3.1 [Abstract Server Capabilities](#-31-abstract-server-capabilities)
+  -  3.2 [Dont Map 1:1 APIs to Tools](#-32-dont-map-11-apis-to-tools)
 - MCP Server Testing
 - MCP Server Deployment
   - [Package Your MCP Server as a Docker Container](#-package-your-mcp-server-as-a-docker-container)
@@ -268,6 +269,31 @@ You may not know ahead of time if you will need to build for an STDIO or HTTP tr
 // TBD good pattern
 
 // TBD example code
+
+---
+
+### 🔵 3.2 Dont Map 1:1 APIs to Tools
+
+Avoid mapping your traditional RESTful or GraphQL APIs in a 1:1 mapping with your Tools. This leads to poor experience for LLMs to drive high-level use-case scenarios.
+
+#### ❌ Avoid 1:1 API Mapping to Tools
+
+While mapping your APIs exactly as they are to tools definitions in an MCP server might seem like a quick low-hanging fruit, it introduces these problems and challenges:
+
+- Too many tools (as there are APIs, which often for a given application is counted in tens or more)
+- Too many tool calls leads to too many tokens
+- Tools become too fine-grained and LLMs need to perform several loops of tool calls to assemble one use-case action
+- How do you decide between different API versions and their tool targets?
+
+Case-study: [Notion API to MCP Tools story](https://x.com/NotionAPI/status/1955666043235692622)
+ 
+#### ✅ Recommended Tool Definitions
+
+- Define tools as high-level use-case scenarios that will be driven by LLMs
+
+#### 💡 Why It Matters
+
+You may 
 
 ---
 
