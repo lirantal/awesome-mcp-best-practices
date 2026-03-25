@@ -16,7 +16,9 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 - 3 MCP Server Architecture
   -  3.1 [Abstract Server Capabilities](#-31-abstract-server-capabilities)
   -  3.2 [Dont Map 1:1 APIs to Tools](#-32-dont-map-11-apis-to-tools)
-- MCP Server Testing
+- 4 MCP Server Testing
+  - 4.1 [Validate Tool Definitions Before Shipping](#-41-validate-tool-definitions-before-shipping)
+  - 4.2 [Automate Validation in CI/CD](#-42-automate-validation-in-cicd)
 - MCP Server Deployment
   - [Package Your MCP Server as a Docker Container](#-package-your-mcp-server-as-a-docker-container)
 - MCP Server Security
@@ -294,6 +296,75 @@ Case-study: [Notion API to MCP Tools story](https://x.com/NotionAPI/status/19556
 #### 💡 Why It Matters
 
 You may 
+
+---
+
+## 4 MCP Server Testing
+
+### 🔵 4.1 Validate Tool Definitions Before Shipping
+
+Run automated checks on your tool definitions to catch common issues before they reach users. Tool definitions are the primary interface between your MCP Server and LLMs — errors here degrade tool-calling accuracy.
+
+#### ❌ Common Issues in Tool Definitions
+
+- Missing or vague tool descriptions (e.g., `"Runs a query"` with no context)
+- Missing `inputSchema` or undocumented parameters
+- No `annotations` (`readOnlyHint`, `destructiveHint`) — LLMs cannot assess safety
+- Duplicate tool names across the server
+- Non-standard naming conventions (spaces, dots, mixed patterns)
+
+#### ✅ Recommended Practice
+
+Validate your `tools/list` response against the MCP spec and best practices using automated tools:
+
+| Tool | Type | What It Checks |
+|------|------|----------------|
+| [MCP Inspector](https://github.com/modelcontextprotocol/inspector) | Official | Interactive visual testing — connect to your server and explore tools, resources, prompts |
+| [WildRun MCP Validator](https://wildrunai.com/tools/mcp-validator) | Community | Automated scoring (0-100) with per-tool issue reports — naming, descriptions, schemas, annotations |
+| [mcp-harness](https://github.com/gabry-ts/mcp-harness) | Community | In-memory test harness for TypeScript MCP servers — supertest-style assertions |
+| [mcpbr](https://github.com/greynewell/mcpbr) | Community | Benchmark runner for evaluating MCP server performance and agentic capabilities |
+
+#### 💡 Why It Matters
+
+A [benchmark of 15 popular MCP servers](https://wildrunai.com/blog/mcp-quality-benchmark) found an average quality score of 86/100. The most common gap: missing `annotations`. Without `readOnlyHint` and `destructiveHint`, LLMs cannot distinguish safe reads from dangerous writes — leading to either overly cautious behavior or unsafe tool execution.
+
+---
+
+### 🔵 4.2 Automate Validation in CI/CD
+
+Add tool definition validation to your CI/CD pipeline to catch regressions before they ship. If a refactor accidentally removes a parameter description or changes a tool name, CI should fail.
+
+#### ✅ Recommended Practice
+
+Export your `tools/list` response to a JSON file and validate it on every push:
+
+```yaml
+# .github/workflows/mcp-validate.yml
+name: MCP Validation
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: thomwseo/mcp-validate-action@v1
+        with:
+          file: mcp-tools.json
+          min-score: 80
+```
+
+To generate the `mcp-tools.json` file from a running server:
+
+```bash
+curl -s -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}' \
+  | jq '.result' > mcp-tools.json
+```
+
+#### 💡 Why It Matters
+
+Tool definitions are code. They should be tested like code. A CI gate that enforces a minimum quality score prevents silent regressions — like a refactor that strips parameter descriptions or a new tool added without annotations.
 
 ---
 
