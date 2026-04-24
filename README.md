@@ -29,6 +29,8 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
   - [Graceful timeouts]()
   - 
 
+- [EnigmAgent](https://github.com/Agnuxo1/EnigmAgent) - AES-256-GCM + Argon2id encrypted local vault MCP server. Implements security best practices: zero-knowledge local-only vault, no data leaves the machine, resolves `{{PLACEHOLDER}}` credentials at runtime.
+
 ## MCP Clients
 
 // TBD
