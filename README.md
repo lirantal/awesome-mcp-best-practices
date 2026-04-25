@@ -22,6 +22,7 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 - MCP Server Security
   - [Secure MCP Server Code]()
   - [Secure MCP Server Dependencies](#-secure-mcp-server-dependencies)
+  - [Keep Configuration Values Out of Prompts](#-keep-configuration-values-out-of-prompts)
   - [Avoid descriptive errors]()
 - MCP Server Performance
   - [Cache costly Tools]()
@@ -360,4 +361,61 @@ MCP Servers typically require broad access and integration capabilities, making 
 - Keep all components updated to the latest secure versions
 - Monitor security advisories related to your dependencies
 - Ensure compliance with licensing and security standards
+
+---
+
+### 🔵 Keep Configuration Values Out of Prompts
+
+API tokens, database URLs, and other configuration values should never appear inline in LLM prompts, system messages, or conversation transcripts. Resolve them at runtime through a local placeholder mechanism instead.
+
+#### ❌ Problematic Pattern
+
+Inlining a literal token in a prompt template or tool description:
+
+```
+You can call the GitHub API using token ghp_AbC123dEfG456hIjK...
+```
+
+The token then ends up in:
+- The model provider's request logs
+- Conversation history files on disk
+- Any telemetry the agent host emits
+- Screenshots, bug reports, and shared session replays
+
+#### ✅ Recommended Practice
+
+Use placeholder references that an MCP server resolves locally just before the tool call leaves the host:
+
+```
+You can call the GitHub API using token {{GH_TOKEN}}
+```
+
+The MCP server holds the encrypted vault, resolves `{{GH_TOKEN}}` to its real value at request time, and the LLM only ever sees the placeholder.
+
+#### 💡 Why It Matters
+
+- Prompts are routinely cached, logged, and replayed — values inlined there have a long tail
+- Conversation transcripts get shared in bug reports, exported to files, and forwarded between agents
+- Rotating a value should not require rewriting every prompt that referenced it
+- A placeholder catalog is safe to commit to version control; a `.env` file is not
+
+#### 🔒 Reference Implementation
+
+[`enigmagent-mcp`](https://github.com/Agnuxo1/enigmagent-mcp) ([npm](https://www.npmjs.com/package/enigmagent-mcp)) is a local-only MCP server that implements this pattern with:
+
+- AES-256-GCM authenticated encryption for the vault payload
+- Argon2id key derivation from a master passphrase
+- Per-entry random nonce; tamper-evident auth tags
+- `{{PLACEHOLDER}}` resolution exposed as both stdio MCP and REST (`POST /resolve`)
+- Compatible with Claude Code, Open WebUI, AnythingLLM, LM Studio, and any MCP client
+- MIT licensed; runs via `npx enigmagent-mcp`
+
+#### 🔧 Practitioner Checklist
+
+- One placeholder per logical value (`{{STRIPE_PK}}`, `{{STRIPE_SK}}` — not concatenated)
+- UPPER_SNAKE_CASE inside double braces for consistency
+- Bind the resolver to `127.0.0.1` unless explicitly proxied
+- Keep the placeholder catalog in version control; keep the encrypted vault out of it
+- Rotate values in the vault rather than editing prompts
+- Re-seed values whenever an agent host is suspected to be compromised
 
