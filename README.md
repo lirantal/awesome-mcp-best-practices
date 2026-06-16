@@ -340,6 +340,9 @@ docker run -p 3000:3000 your-mcp-server-image
 
 ---
 
+
+- [MCP Core Defense](https://github.com/amurlaniakea/mcp-core-defense) - A comprehensive 7-phase defense proxy and runtime supervisor for MCP clients. It mitigates prompt injections, filters filesystem operations via a robust sandbox, validates strict schema constraints, and prevents tool description poisoning. Licensed under AGPLv3.
+- [Agent Fixer Stage](https://github.com/amurlaniakea/agent-fixer-stage) - A multi-layered output sanitization engine that intercepts and neutralizes data leaks, malicious payloads, and behavioral hallucinations in multi-agent workflows.
 ## MCP Server Security
   
 ### 🔵 Secure MCP Server Dependencies
