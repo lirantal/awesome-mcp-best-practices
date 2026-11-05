@@ -20,14 +20,8 @@ A curated and opinionated list of awesome Model Context Protocol (MCP) best prac
 - MCP Server Deployment
   - [Package Your MCP Server as a Docker Container](#-package-your-mcp-server-as-a-docker-container)
 - MCP Server Security
-  - [Secure MCP Server Code]()
+  - [Secure MCP Server Code](#-secure-mcp-server-code)
   - [Secure MCP Server Dependencies](#-secure-mcp-server-dependencies)
-  - [Avoid descriptive errors]()
-- MCP Server Performance
-  - [Cache costly Tools]()
-- MCP Server Errors and Observability
-  - [Graceful timeouts]()
-  - 
 
 ## MCP Clients
 
@@ -341,6 +335,20 @@ docker run -p 3000:3000 your-mcp-server-image
 ---
 
 ## MCP Server Security
+
+### 🔵 Secure MCP Server Code
+
+An MCP tool's name, description and argument schema help clients call it correctly, but they do not replace security checks inside the server. Make the decision to permit an operation at the trusted server boundary.
+
+#### ✅ Recommended Practice
+
+- Validate tool arguments at the handler boundary. Check the actual requested resource, file path, destination and operation against an explicit allowlist or other server-side policy; do not rely solely on client-supplied metadata.
+- Apply least-privilege access controls to every sensitive tool call. For HTTP servers that require authorization, validate access tokens for the intended resource and required scopes before dispatching protected operations.
+- Treat tool results and externally retrieved text as untrusted data. Do not interpret that content as instructions granting permission to call additional tools or disclose secrets.
+- Exercise both permitted and denied operations in tests, including invalid tool arguments, unauthorized resource access and insufficient scopes.
+
+For HTTP authorization patterns, consult the [MCP TypeScript SDK's server authorization guidance](https://ts.sdk.modelcontextprotocol.io/v2/serving/authorization). Authorization is an enforcement boundary, not a prompt or a tool description.
+
   
 ### 🔵 Secure MCP Server Dependencies
 
