@@ -369,3 +369,6 @@ MCP Servers typically require broad access and integration capabilities, making 
 - Monitor security advisories related to your dependencies
 - Ensure compliance with licensing and security standards
 
+### Reference Remote MCP Servers
+
+- [No Stairs Please MCP](https://nostairsplease.com/mcp) - Production Streamable HTTP MCP server with OAuth 2.1 + DCR and `.well-known/mcp/server-card.json` for US & BC live-music venue discovery.
